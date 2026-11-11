@@ -8,9 +8,16 @@ function App() {
   }
   return (
     <div>
-   <h1>love pizza</h1>
+   <h1>Meal Finder</h1>
   <button onClick={loadMeal}>random meal</button>
-  {meal && <h2>{meal.strMeal}</h2>}
+  {meal &&(
+    <div>
+      <h2>{meal.strMeal}</h2> 
+      <h3>{meal.strCategory}</h3>
+      <img className="meal-img" src={meal.strMealThumb} alt={meal.strMeal}/>
+      <p>{meal.strCategory} ·  {meal.strArea}</p>
+      </div>
+    )}
   </div>
   )
 }

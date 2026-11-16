@@ -7,6 +7,7 @@ function App() {
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [searched, setsearched] = useState(false)
 
   async function loadMeal() {
     const res = await fetch(`https://www.themealdb.com/api/json/v1/1/random.php`)
@@ -14,6 +15,7 @@ function App() {
     setMeal(data.meals[0])
   }
   async function searchMeals() {
+    setsearched(true)
     setLoading(true)
     setError('')
     try {
@@ -39,7 +41,13 @@ function App() {
       />
       <button onClick={searchMeals}>Search</button>
       {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+      {error &&(
+        <div>
+           <p>{error}</p>
+           <button onClick={searchMeals}>Try again</button>
+           </div>
+          )}
+      {meals.length === 0 && searched && !loading && !error && <p>No meals found</p>}
       {meal && (
         <div>
           <h2>{meal.strMeal}</h2>

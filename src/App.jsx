@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import MealCard from './MealCard'
+
 function App() {
   const [meal, setMeal] = useState(null)
   const [meals, setMeals] = useState([]);
@@ -34,10 +36,10 @@ function App() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="search meals .."
-        />
+      />
       <button onClick={searchMeals}>Search</button>
-        {loading && <p>Loading...</p>}
-        {error && <p>{error}</p>}
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
       {meal && (
         <div>
           <h2>{meal.strMeal}</h2>
@@ -46,11 +48,7 @@ function App() {
         </div>
       )}
       {meals.map((m) => (
-        <div key={m.idMeal}>
-          <h3>{m.strMeal}</h3>
-          <img className="meal-img" src={m.strMealThumb} alt={m.strMeal} />
-
-        </div>
+        <MealCard key={m.idMeal} name={m.strMeal} image={m.strMealThumb} />
       ))}
     </div>
   )

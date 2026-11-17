@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import MealCard from './MealCard'
 
 function App() {
@@ -8,11 +8,36 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [searched, setsearched] = useState(false)
+  const [categories, setCategories] = useState([])
 
+  useEffect(() => {
+    async function loadCategories() {
+      const res = await fetch(`https://www.themealdb.com/api/json/v1/1/categories.php`)
+      const data = await res.json()
+      setCategories(data.categories)
+    }
+    loadCategories()
+  }, [])
   async function loadMeal() {
     const res = await fetch(`https://www.themealdb.com/api/json/v1/1/random.php`)
     const data = await res.json()
     setMeal(data.meals[0])
+  }
+  async function loadByCategory(name) {
+    setsearched(true)
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`)
+      if (!res.ok) {
+        throw new Error()
+      }
+      const data = await res.json()
+      setMeals(data.meals || [])
+    } catch {
+      setError('Could not load the category')
+    }
+    setLoading(false)
   }
   async function searchMeals() {
     setsearched(true)
@@ -34,6 +59,11 @@ function App() {
     <div>
       <h1>Meal Finder</h1>
       <button onClick={loadMeal}>random meal</button><br></br>
+      <div>
+        {categories.map((c) => (
+          <button key={c.idCategory} onClick={() => loadByCategory(c.strCategory)}>{c.strCategory}</button>
+        ))}
+      </div>
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -41,12 +71,12 @@ function App() {
       />
       <button onClick={searchMeals}>Search</button>
       {loading && <p>Loading...</p>}
-      {error &&(
+      {error && (
         <div>
-           <p>{error}</p>
-           <button onClick={searchMeals}>Try again</button>
-           </div>
-          )}
+          <p>{error}</p>
+          <button onClick={searchMeals}>Try again</button>
+        </div>
+      )}
       {meals.length === 0 && searched && !loading && !error && <p>No meals found</p>}
       {meal && (
         <div>

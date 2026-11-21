@@ -9,6 +9,7 @@ function App() {
   const [error, setError] = useState('')
   const [searched, setsearched] = useState(false)
   const [categories, setCategories] = useState([])
+  const [selectedId, setSelectedId] = useState(null)
 
   useEffect(() => {
     async function loadCategories() {
@@ -85,8 +86,9 @@ function App() {
           <p>{meal.strCategory} ·  {meal.strArea}</p>
         </div>
       )}
+        <p>selected : {selectedId}</p>
       {meals.map((m) => (
-        <MealCard key={m.idMeal} name={m.strMeal} image={m.strMealThumb} />
+        <MealCard key={m.idMeal} name={m.strMeal} image={m.strMealThumb} onSelect={() => setSelectedId(m.idMeal)} />
       ))}
     </div>
   )

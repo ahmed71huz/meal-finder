@@ -10,7 +10,25 @@ function App() {
   const [searched, setsearched] = useState(false)
   const [categories, setCategories] = useState([])
   const [selectedId, setSelectedId] = useState(null)
+  const [details, setDetails] = useState(null);
+  const ingredients = []
 
+  if (details) {
+    for (let i = 1; i <= 20; i++) {
+      const name = details["strIngredient" + i];
+      if (name) {
+        ingredients.push(name);
+
+      }
+    }
+
+  }
+  useEffect(() => {
+    if (!selectedId) return;
+    fetch("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + selectedId)
+      .then(res => res.json())
+      .then(data => setDetails(data.meals[0]));
+  }, [selectedId]);
   useEffect(() => {
     async function loadCategories() {
       const res = await fetch(`https://www.themealdb.com/api/json/v1/1/categories.php`)
@@ -86,7 +104,8 @@ function App() {
           <p>{meal.strCategory} ·  {meal.strArea}</p>
         </div>
       )}
-        <p>selected : {selectedId}</p>
+      <p>selected : {selectedId}</p>
+      {details && <h2>{details.strMeal}</h2>}
       {meals.map((m) => (
         <MealCard key={m.idMeal} name={m.strMeal} image={m.strMealThumb} onSelect={() => setSelectedId(m.idMeal)} />
       ))}

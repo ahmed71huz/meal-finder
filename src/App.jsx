@@ -12,6 +12,7 @@ function App() {
   const [selectedId, setSelectedId] = useState(null)
   const [details, setDetails] = useState(null);
   const ingredients = []
+  const steps = details ? details.strInstructions.split("\r\n") : []
 
   if (details) {
     for (let i = 1; i <= 20; i++) {
@@ -105,7 +106,20 @@ function App() {
         </div>
       )}
       <p>selected : {selectedId}</p>
-      {details && <h2>{details.strMeal}</h2>}
+      {details && (
+        <div>
+          <h2>{details.strMeal}</h2>
+          <ul>
+            {ingredients.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+          <h3>Instructions</h3>
+          {steps.map((d, index ) => (
+            <p key={index} >{d}</p>
+          ))}
+        </div>
+        )}
       {meals.map((m) => (
         <MealCard key={m.idMeal} name={m.strMeal} image={m.strMealThumb} onSelect={() => setSelectedId(m.idMeal)} />
       ))}

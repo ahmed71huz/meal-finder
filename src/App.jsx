@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import MealCard from './MealCard'
+import SearchBar from './SearchBar'
+import CategoryFilter from './CategoryFilter'
+import MealList from './MealList'
 
 function App() {
   const [meal, setMeal] = useState(null)
@@ -79,17 +82,8 @@ function App() {
     <div>
       <h1>Meal Finder</h1>
       <button onClick={loadMeal}>random meal</button><br></br>
-      <div>
-        {categories.map((c) => (
-          <button key={c.idCategory} onClick={() => loadByCategory(c.strCategory)}>{c.strCategory}</button>
-        ))}
-      </div>
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="search meals .."
-      />
-      <button onClick={searchMeals}>Search</button>
+      <CategoryFilter categories={categories} onSelect={loadByCategory} />
+      <SearchBar value={query} onChange={setQuery} onSearch={searchMeals} />
       {loading && <p>Loading...</p>}
       {error && (
         <div>
@@ -120,9 +114,7 @@ function App() {
           ))}
         </div>
         )}
-      {meals.map((m) => (
-        <MealCard key={m.idMeal} name={m.strMeal} image={m.strMealThumb} onSelect={() => setSelectedId(m.idMeal)} />
-      ))}
+        <MealList meals={meals} onSelect={setSelectedId} />
     </div>
   )
 }

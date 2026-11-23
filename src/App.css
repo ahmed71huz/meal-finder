@@ -16,7 +16,12 @@
     outline-offset: 2px;
   }
 }
-
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  grid-auto-flow: row;
+}
 .hero {
   position: relative;
 

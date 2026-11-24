@@ -17,6 +17,7 @@ function App() {
   const [details, setDetails] = useState(null);
   const ingredients = []
   const steps = details ? details.strInstructions.split("\r\n") : []
+  const [favs, setFavs] = useState([])
 
 if (details) {
   for (let i = 1; i <= 20; i++) {
@@ -25,6 +26,15 @@ if (details) {
     if (name) {
       ingredients.push((measure + " " + name).trim())
     }
+  }
+}
+function toggleFav(meal) {
+  const exists = favs.some((f) => f.idMeal === meal.idMeal)
+  if(exists){
+    setFavs(favs.filter((f) => f.idMeal !== meal.idMeal))
+  }
+  else {
+    setFavs([...favs, meal])
   }
 }
   useEffect(() => {
@@ -108,7 +118,7 @@ if (details) {
           onClose={() => { setSelectedId(null); setDetails(null) }}
         />
       )}
-      <MealList meals={meals} onSelect={setSelectedId} />
+      <MealList meals={meals} onSelect={setSelectedId} favs={favs} onToggleFav={toggleFav} />
     </div>
   )
 }

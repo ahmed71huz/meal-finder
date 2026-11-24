@@ -3,6 +3,7 @@ import MealCard from './MealCard'
 import SearchBar from './SearchBar'
 import CategoryFilter from './CategoryFilter'
 import MealList from './MealList'
+import MealDetails from './MealDetails'
 
 function App() {
   const [meal, setMeal] = useState(null)
@@ -17,16 +18,15 @@ function App() {
   const ingredients = []
   const steps = details ? details.strInstructions.split("\r\n") : []
 
-  if (details) {
-    for (let i = 1; i <= 20; i++) {
-      const name = details["strIngredient" + i];
-      if (name) {
-        ingredients.push(name);
-
-      }
+if (details) {
+  for (let i = 1; i <= 20; i++) {
+    const name = details["strIngredient" + i]
+    const measure = details["strMeasure" + i]
+    if (name) {
+      ingredients.push((measure + " " + name).trim())
     }
-
   }
+}
   useEffect(() => {
     if (!selectedId) return;
     fetch("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + selectedId)
@@ -101,20 +101,14 @@ function App() {
       )}
       <p>selected : {selectedId}</p>
       {details && (
-        <div>
-          <h2>{details.strMeal}</h2>
-          <ul>
-            {ingredients.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-          <h3>Instructions</h3>
-          {steps.map((d, index ) => (
-            <p key={index} >{d}</p>
-          ))}
-        </div>
-        )}
-        <MealList meals={meals} onSelect={setSelectedId} />
+        <MealDetails
+          details={details}
+          ingredients={ingredients}
+          steps={steps}
+          onClose={() => { setSelectedId(null); setDetails(null) }}
+        />
+      )}
+      <MealList meals={meals} onSelect={setSelectedId} />
     </div>
   )
 }

@@ -17,8 +17,14 @@ function App() {
   const [details, setDetails] = useState(null);
   const ingredients = []
   const steps = details ? details.strInstructions.split("\r\n") : []
-  const [favs, setFavs] = useState([])
+  const [favs, setFavs] = useState(() => {
+    const saved = localStorage.getItem("favs")
+    return saved ? JSON.parse(saved) : []
+  })
 
+useEffect(() => {
+  localStorage.setItem("favs", JSON.stringify(favs))
+}, [favs])
 if (details) {
   for (let i = 1; i <= 20; i++) {
     const name = details["strIngredient" + i]

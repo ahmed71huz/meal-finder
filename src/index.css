@@ -11,6 +11,63 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+#root {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  text-align: center;
+  color: var(--main);
+  margin-bottom: 24px;
+}
+
+button {
+  background: var(--main);
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+input {
+  padding: 8px 12px;
+  border: 2px solid var(--text);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.search {
+  margin: 16px 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.chips button {
+  background: white;
+  color: var(--text);
+  border: 2px solid var(--text);
+}
+
+.chips button:hover {
+  background: var(--text);
+  color: white;
+  opacity: 1;
+}
+
 .meal-img {
   width: 300px;
   max-width: 100%;

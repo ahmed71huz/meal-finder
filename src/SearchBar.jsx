@@ -1,7 +1,7 @@
 
 export default function SearchBar({ value, onChange, onSearch }) {
     return (
-        <div>
+        <div className="search">
             <input
                 value={value}
                 onChange={(e) => onChange(e.target.value)}

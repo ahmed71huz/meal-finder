@@ -2,7 +2,7 @@
 
 export default function CategoryFilter({ categories, onSelect }) {
     return (
-        <div>
+        <div className="chips">
             {categories.map((c) => (
                 <button key={c.idCategory} onClick={() => onSelect(c.strCategory)}>{c.strCategory}</button>
             ))}

@@ -7,6 +7,7 @@ export default function MealList({ meals, onSelect, favs, onToggleFav }) {
                 <MealCard 
                 key={m.idMeal} 
                 meal={m}
+                name={m.strMeal}
                 isFav={favs.some((f) => f.idMeal === m.idMeal)} 
                 image={m.strMealThumb}
                 onToggleFav={onToggleFav}

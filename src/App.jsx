@@ -117,7 +117,8 @@ function toggleFav(meal) {
         </div>
       )}
       <p>selected : {selectedId}</p>
-      <button onClick={() => setShowFavs(!showFavs)}>Favourites</button>
+      <button onClick={() => setShowFavs(!showFavs)}>{showFavs ? "show all" : "Favourites"}</button>
+      {showFavs && favs.length === 0 && <p>No favourites yet</p>}
       {details && (
         <MealDetails
           details={details}

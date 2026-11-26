@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
 import MealCard from './MealCard'
+import SearchBar from './SearchBar'
+import CategoryFilter from './CategoryFilter'
+import MealList from './MealList'
+import MealDetails from './MealDetails'
 
 function App() {
   const [meal, setMeal] = useState(null)
@@ -13,17 +17,33 @@ function App() {
   const [details, setDetails] = useState(null);
   const ingredients = []
   const steps = details ? details.strInstructions.split("\r\n") : []
+  const [favs, setFavs] = useState(() => {
+    const saved = localStorage.getItem("favs")
+    return saved ? JSON.parse(saved) : []
+  })
+  const [showFavs, setShowFavs] = useState(false)
 
-  if (details) {
-    for (let i = 1; i <= 20; i++) {
-      const name = details["strIngredient" + i];
-      if (name) {
-        ingredients.push(name);
-
-      }
+useEffect(() => {
+  localStorage.setItem("favs", JSON.stringify(favs))
+}, [favs])
+if (details) {
+  for (let i = 1; i <= 20; i++) {
+    const name = details["strIngredient" + i]
+    const measure = details["strMeasure" + i]
+    if (name) {
+      ingredients.push((measure + " " + name).trim())
     }
-
   }
+}
+function toggleFav(meal) {
+  const exists = favs.some((f) => f.idMeal === meal.idMeal)
+  if(exists){
+    setFavs(favs.filter((f) => f.idMeal !== meal.idMeal))
+  }
+  else {
+    setFavs([...favs, meal])
+  }
+}
   useEffect(() => {
     if (!selectedId) return;
     fetch("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + selectedId)
@@ -79,17 +99,8 @@ function App() {
     <div>
       <h1>Meal Finder</h1>
       <button onClick={loadMeal}>random meal</button><br></br>
-      <div>
-        {categories.map((c) => (
-          <button key={c.idCategory} onClick={() => loadByCategory(c.strCategory)}>{c.strCategory}</button>
-        ))}
-      </div>
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="search meals .."
-      />
-      <button onClick={searchMeals}>Search</button>
+      <CategoryFilter categories={categories} onSelect={loadByCategory} />
+      <SearchBar value={query} onChange={setQuery} onSearch={searchMeals} />
       {loading && <p>Loading...</p>}
       {error && (
         <div>
@@ -106,23 +117,17 @@ function App() {
         </div>
       )}
       <p>selected : {selectedId}</p>
+      <button onClick={() => setShowFavs(!showFavs)}>{showFavs ? "show all" : "Favourites"}</button>
+      {showFavs && favs.length === 0 && <p>No favourites yet</p>}
       {details && (
-        <div>
-          <h2>{details.strMeal}</h2>
-          <ul>
-            {ingredients.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-          <h3>Instructions</h3>
-          {steps.map((d, index ) => (
-            <p key={index} >{d}</p>
-          ))}
-        </div>
-        )}
-      {meals.map((m) => (
-        <MealCard key={m.idMeal} name={m.strMeal} image={m.strMealThumb} onSelect={() => setSelectedId(m.idMeal)} />
-      ))}
+        <MealDetails
+          details={details}
+          ingredients={ingredients}
+          steps={steps}
+          onClose={() => { setSelectedId(null); setDetails(null) }}
+        />
+      )}
+      <MealList meals={showFavs ? favs : meals} onSelect={setSelectedId} favs={favs} onToggleFav={toggleFav} />
     </div>
   )
 }

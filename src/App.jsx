@@ -21,6 +21,7 @@ function App() {
     const saved = localStorage.getItem("favs")
     return saved ? JSON.parse(saved) : []
   })
+  const [showFavs, setShowFavs] = useState(false)
 
 useEffect(() => {
   localStorage.setItem("favs", JSON.stringify(favs))
@@ -116,6 +117,7 @@ function toggleFav(meal) {
         </div>
       )}
       <p>selected : {selectedId}</p>
+      <button onClick={() => setShowFavs(!showFavs)}>Favourites</button>
       {details && (
         <MealDetails
           details={details}
@@ -124,7 +126,7 @@ function toggleFav(meal) {
           onClose={() => { setSelectedId(null); setDetails(null) }}
         />
       )}
-      <MealList meals={meals} onSelect={setSelectedId} favs={favs} onToggleFav={toggleFav} />
+      <MealList meals={showFavs ? favs : meals} onSelect={setSelectedId} favs={favs} onToggleFav={toggleFav} />
     </div>
   )
 }

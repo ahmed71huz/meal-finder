@@ -5,6 +5,8 @@ function MealDetails({ details, ingredients, steps, onClose }) {
             {details && (
                 <div className="box">
                     <h2>{details.strMeal}</h2>
+                    <img className="meal-img" src={details.strMealThumb} alt={details.strMeal} />
+                    <p>{details.strCategory} · {details.strArea}</p>
                     <ul>
                         {ingredients.map((item, index) => (
                             <li key={index}>{item}</li>
